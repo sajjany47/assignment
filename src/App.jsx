@@ -9,6 +9,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<ScoreList />} />
+          <Route path="/single-card/:id" element={<ScoreList />} />
         </Routes>
       </BrowserRouter>
     </>
