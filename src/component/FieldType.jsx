@@ -1,31 +1,46 @@
 /* eslint-disable react/prop-types */
+import { getIn } from "formik";
 import { Chips } from "primereact/chips";
 import { InputText } from "primereact/inputtext";
 
 export const FieldInput = ({ field, form: { touched, errors }, ...props }) => (
   <>
     <span className="p-float-label">
-      <InputText {...field} {...props} className="w-full" />
+      <InputText
+        {...field}
+        {...props}
+        className={`w-full  ${
+          Boolean(getIn(touched[field.name])) &&
+          getIn(errors[field.name]) &&
+          "p-invalid"
+        }`}
+      />
       <label htmlFor={field.name}>{props.label}</label>
     </span>
-    {touched[field.name] && errors[field.name] && (
-      <small id={`${props.name}-help`} className="error">
-        {errors[field.name]}
-      </small>
-    )}
+    {Boolean(getIn(touched[field.name])) &&
+      Boolean(getIn(errors[field.name])) && (
+        <small className="text-red-600">{getIn(errors[field.name])}</small>
+      )}
   </>
 );
 
 export const FieldChips = ({ field, form: { touched, errors }, ...props }) => (
   <>
     <span className="p-float-label">
-      <Chips {...field} {...props} className="w-full" />
+      <Chips
+        {...field}
+        {...props}
+        className={`w-full  ${
+          Boolean(getIn(touched[field.name])) &&
+          getIn(errors[field.name]) &&
+          "p-invalid"
+        }`}
+      />
       <label htmlFor={field.name}>{props.label}</label>
     </span>
-    {touched[field.name] && errors[field.name] && (
-      <small id={`${props.name}-help`} className="error">
-        {errors[field.name]}
-      </small>
-    )}
+    {Boolean(getIn(touched[field.name])) &&
+      Boolean(getIn(errors[field.name])) && (
+        <small className="text-red-600">{getIn(errors[field.name])}</small>
+      )}
   </>
 );
