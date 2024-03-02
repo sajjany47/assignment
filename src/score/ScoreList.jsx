@@ -2,7 +2,6 @@ import { Button } from "primereact/button";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { useEffect, useState, useRef } from "react";
-import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 import { Toast } from "primereact/toast";
 import { ScoreService } from "./ScoreService";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +11,6 @@ const ScoreList = () => {
   const toast = useRef(null);
   const scoreService = new ScoreService();
   const [customers, setCustomers] = useState([]);
-  const [id, setId] = useState(null);
 
   useEffect(() => {
     scoreService
@@ -57,27 +55,15 @@ const ScoreList = () => {
       </>
     );
   };
-  const confirm = (event) => {
-    setId(event);
-    confirmPopup({
-      target: event.currentTarget,
-      message: "Do you want to delete this record?",
-      icon: "pi pi-info-circle",
-      defaultFocus: "reject",
-      acceptClassName: "p-button-danger",
-      accept,
-      reject,
-    });
-  };
-
-  const accept = () => {
+  const confirm = (id) => {
     scoreService
       .scoreCardDelete(id)
       .then((res) => {
+        console.log(res);
         toast.current.show({
-          severity: "info",
-          summary: "Confirmed",
-          detail: res.message,
+          severity: "success",
+          summary: "Success",
+          detail: "Score card deleted successfully",
           life: 3000,
         });
       })
@@ -91,18 +77,9 @@ const ScoreList = () => {
       });
   };
 
-  const reject = () => {
-    toast.current.show({
-      severity: "warn",
-      summary: "Rejected",
-      detail: "You have rejected",
-      life: 3000,
-    });
-  };
   return (
     <>
       <Toast ref={toast} />
-      <ConfirmPopup />
       <div className="grid">
         <div className="col-12 flex justify-content-end">
           <Button
