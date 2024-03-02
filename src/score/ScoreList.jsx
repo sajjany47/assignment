@@ -5,20 +5,29 @@ import { useEffect, useState, useRef } from "react";
 import { Toast } from "primereact/toast";
 import { ScoreService } from "./ScoreService";
 import { useNavigate } from "react-router-dom";
+import Loader from "../component/Loader";
 
 const ScoreList = () => {
   const navigate = useNavigate();
   const toast = useRef(null);
   const scoreService = new ScoreService();
   const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    scoreCardList();
+  }, []);
+
+  const scoreCardList = () => {
+    setLoading(true);
     scoreService
       .scoreCardList()
       .then((res) => {
         setCustomers(res);
+        setLoading(false);
       })
       .catch((err) => {
+        setLoading(false);
         toast.current.show({
           severity: "error",
           summary: "Error",
@@ -26,8 +35,7 @@ const ScoreList = () => {
           life: 3000,
         });
       });
-  }, []);
-
+  };
   const actionTemplate = (item) => {
     return (
       <>
@@ -56,9 +64,11 @@ const ScoreList = () => {
     );
   };
   const confirm = (id) => {
+    setLoading(true);
     scoreService
       .scoreCardDelete(id)
       .then((res) => {
+        setLoading(false);
         console.log(res);
         toast.current.show({
           severity: "success",
@@ -68,17 +78,23 @@ const ScoreList = () => {
         });
       })
       .catch((error) => {
+        setLoading(false);
         toast.current.show({
           severity: "error",
           summary: "Error",
           detail: error,
           life: 3000,
         });
+      })
+      .finally(() => {
+        setLoading(false);
+        scoreCardList();
       });
   };
 
   return (
     <>
+      {loading && <Loader />}
       <Toast ref={toast} />
       <div className="grid">
         <div className="col-12 flex justify-content-end">

@@ -7,6 +7,7 @@ import { Divider } from "primereact/divider";
 import { ScoreService } from "./ScoreService";
 import { useRef, useEffect, useState } from "react";
 import { Toast } from "primereact/toast";
+import Loader from "../component/Loader";
 
 const SingleScore = () => {
   const navigate = useNavigate();
@@ -14,16 +15,20 @@ const SingleScore = () => {
   const scoreService = new ScoreService();
   const toast = useRef(null);
   const [singleData, setSingleData] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (data.state.actionType === "edit") {
+      setLoading(true);
       scoreService
         .singleScoreCard(data.state.id)
         .then((res) => {
           console.log(res);
           setSingleData(res);
+          setLoading(false);
         })
         .catch((err) => {
+          setLoading(false);
           toast.current.show({
             severity: "error",
             summary: "Error",
@@ -73,6 +78,7 @@ const SingleScore = () => {
       : { ...singleData };
 
   const handleSubmit = (values) => {
+    setLoading(true);
     const reqData = {
       title: values.title,
       questions: values.questions.map((item) => ({
@@ -85,6 +91,7 @@ const SingleScore = () => {
       scoreService
         .scoreCardCreate(reqData)
         .then((res) => {
+          setLoading(false);
           console.log(res);
           toast.current.show({
             severity: "success",
@@ -94,6 +101,7 @@ const SingleScore = () => {
           });
         })
         .catch((error) => {
+          setLoading(false);
           toast.current.show({
             severity: "error",
             summary: "Error",
@@ -106,6 +114,7 @@ const SingleScore = () => {
         .singleScoreCardUpdate(data.state.id, reqData)
         .then((res) => {
           console.log(res);
+          setLoading(false);
           toast.current.show({
             severity: "success",
             summary: "Success",
@@ -114,6 +123,7 @@ const SingleScore = () => {
           });
         })
         .catch((error) => {
+          setLoading(false);
           toast.current.show({
             severity: "error",
             summary: "Error",
@@ -125,6 +135,7 @@ const SingleScore = () => {
   };
   return (
     <>
+      {loading && <Loader />}
       <Toast ref={toast} />
       <div className="grid">
         <div className="col-12 flex justify-content-end">
