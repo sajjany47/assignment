@@ -10,17 +10,16 @@ export const FieldInput = ({ field, form: { touched, errors }, ...props }) => (
         {...field}
         {...props}
         className={`w-full  ${
-          Boolean(getIn(touched[field.name])) &&
-          getIn(errors[field.name]) &&
+          Boolean(getIn(errors, field.name)) &&
+          getIn(touched, field.name) &&
           "p-invalid"
         }`}
       />
       <label htmlFor={field.name}>{props.label}</label>
     </span>
-    {Boolean(getIn(touched[field.name])) &&
-      Boolean(getIn(errors[field.name])) && (
-        <small className="text-red-600">{getIn(errors[field.name])}</small>
-      )}
+    {Boolean(getIn(errors, field.name)) && getIn(touched, field.name) && (
+      <small className="text-red-600">{getIn(errors, field.name)}</small>
+    )}
   </>
 );
 
@@ -31,16 +30,15 @@ export const FieldChips = ({ field, form: { touched, errors }, ...props }) => (
         {...field}
         {...props}
         className={`w-full  ${
-          Boolean(getIn(touched[field.name])) &&
-          getIn(errors[field.name]) &&
+          Boolean(getIn(errors, field.name)) &&
+          getIn(touched, field.name) &&
           "p-invalid"
         }`}
       />
       <label htmlFor={field.name}>{props.label}</label>
     </span>
-    {Boolean(getIn(touched[field.name])) &&
-      Boolean(getIn(errors[field.name])) && (
-        <small className="text-red-600">{getIn(errors[field.name])}</small>
-      )}
+    {Boolean(getIn(errors, field.name)) && getIn(touched, field.name) && (
+      <small className="text-red-600">{getIn(errors, field.name)}</small>
+    )}
   </>
 );

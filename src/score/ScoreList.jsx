@@ -15,24 +15,19 @@ const ScoreList = () => {
   const [id, setId] = useState(null);
 
   useEffect(() => {
-    setCustomers([
-      {
-        id: 1001,
-        name: "James Butt",
-      },
-      {
-        id: 1002,
-        name: "James Butt",
-      },
-      {
-        id: 1003,
-        name: "James Butt",
-      },
-      {
-        id: 1004,
-        name: "James Butt",
-      },
-    ]);
+    scoreService
+      .scoreCardList()
+      .then((res) => {
+        setCustomers(res);
+      })
+      .catch((err) => {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: err[0]?.detail?.msg,
+          life: 3000,
+        });
+      });
   }, []);
 
   const actionTemplate = (item) => {
@@ -47,7 +42,17 @@ const ScoreList = () => {
             aria-label="Cancel"
             onClick={() => confirm(item.id)}
           />
-          <Button icon="pi pi-pencil" rounded text aria-label="Filter" />
+          <Button
+            icon="pi pi-pencil"
+            rounded
+            text
+            aria-label="Filter"
+            onClick={() =>
+              navigate("/single-card", {
+                state: { actionType: "edit", id: item.id },
+              })
+            }
+          />
         </span>
       </>
     );
@@ -116,7 +121,7 @@ const ScoreList = () => {
             rowsPerPageOptions={[5, 10, 25, 50]}
             tableStyle={{ minWidth: "50rem" }}
           >
-            <Column field="name" header="Name"></Column>
+            <Column field="title" header="Name"></Column>
             <Column body={actionTemplate} header="Action"></Column>
           </DataTable>
         </div>
