@@ -5,8 +5,10 @@ import { useEffect, useState, useRef } from "react";
 import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 import { Toast } from "primereact/toast";
 import { ScoreService } from "./ScoreService";
+import { useNavigate } from "react-router-dom";
 
 const ScoreList = () => {
+  const navigate = useNavigate();
   const toast = useRef(null);
   const scoreService = new ScoreService();
   const [customers, setCustomers] = useState([]);
@@ -96,17 +98,28 @@ const ScoreList = () => {
     <>
       <Toast ref={toast} />
       <ConfirmPopup />
-      <div className="card">
-        <DataTable
-          value={customers}
-          paginator
-          rows={5}
-          rowsPerPageOptions={[5, 10, 25, 50]}
-          tableStyle={{ minWidth: "50rem" }}
-        >
-          <Column field="name" header="Name"></Column>
-          <Column body={actionTemplate} header="Action"></Column>
-        </DataTable>
+      <div className="grid">
+        <div className="col-12 flex justify-content-end">
+          <Button
+            label="Score Card"
+            icon="pi pi-plus"
+            onClick={() => {
+              navigate("/single-card", { state: { actionType: "add" } });
+            }}
+          />
+        </div>
+        <div className="col-12 card">
+          <DataTable
+            value={customers}
+            paginator
+            rows={5}
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            tableStyle={{ minWidth: "50rem" }}
+          >
+            <Column field="name" header="Name"></Column>
+            <Column body={actionTemplate} header="Action"></Column>
+          </DataTable>
+        </div>
       </div>
     </>
   );
